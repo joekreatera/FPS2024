@@ -7,6 +7,7 @@ public class MovePlayer : MonoBehaviour
     public float velocity;
     public float rotateVelocity;
 
+    public Rigidbody body;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,7 +19,11 @@ public class MovePlayer : MonoBehaviour
     {   
         float advance = Input.GetAxis("Vertical");
         float rotate = Input.GetAxis("Horizontal");
-       
+
+        Vector3 currentVelocity = Vector3.forward * velocity * advance;
+        currentVelocity.y = body.velocity.y;
+        body.velocity = currentVelocity;
+
     }
 
     void MovePlayerV1() {
