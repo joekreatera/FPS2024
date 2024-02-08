@@ -15,11 +15,16 @@ public class MovePlayer : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {   
         float advance = Input.GetAxis("Vertical");
         float rotate = Input.GetAxis("Horizontal");
-        Debug.Log(advance);
-        this.gameObject.transform.Translate(Vector3.forward*velocity*advance);
+       
+    }
+
+    void MovePlayerV1() {
+        float advance = Input.GetAxis("Vertical");
+        float rotate = Input.GetAxis("Horizontal");
+        this.gameObject.transform.Translate(Vector3.forward * velocity * advance);
         this.gameObject.transform.Rotate(Vector3.up * rotateVelocity * rotate);
     }
 }
