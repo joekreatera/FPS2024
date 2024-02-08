@@ -7,31 +7,47 @@ public class MovePlayer : MonoBehaviour
     public float velocity;
     public float rotateVelocity;
 
-    public Rigidbody body;
+    Rigidbody body;
+    CharacterController controller;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        controller = this.gameObject.GetComponent<CharacterController>();
+        body = this.gameObject.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
-    void Update()
+    bool wasGrounded = false;
+    void FixedUpdate()
     {   
         float advance = Input.GetAxis("Vertical");
         float rotate = Input.GetAxis("Horizontal");
 
-        bool crash = Physics.Raycast(this.gameObject.transform.position, Vector3.down, 1.2f);
-        Debug.Log(crash);
-
         this.gameObject.transform.Rotate(Vector3.up * rotateVelocity * rotate);
-        // problema: cuando va en una rampa , brinca sin razon 
-        Vector3 currentVelocity = this.gameObject.transform.TransformDirection(Vector3.forward)  * velocity * advance;
-        currentVelocity.y = body.velocity.y;
+        RaycastHit hit;
+        bool crash = Physics.Raycast(this.gameObject.transform.position, Vector3.down, out hit ,1.2f );
         
-        body.velocity = currentVelocity;
-        body.angularVelocity = Vector3.zero;
+        body.AddForce(this.gameObject.transform.TransformDirection(Vector3.forward) * velocity * advance, ForceMode.Impulse);
 
 
+        Vector3 xzVel = body.velocity;
+        xzVel.y = 0;
+
+        if (xzVel.magnitude > 5) {
+            xzVel = this.gameObject.transform.TransformDirection(Vector3.forward) * 5;
+            xzVel.y = body.velocity.y;
+            body.velocity = xzVel;
+        }
+        
+
+        xzVel = body.velocity;
+        xzVel.z = 0;
+        xzVel.x = 0;
+
+        if (advance <= 0) {
+            body.velocity = xzVel;
+        }
 
     }
 
