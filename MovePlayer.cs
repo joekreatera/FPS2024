@@ -20,13 +20,18 @@ public class MovePlayer : MonoBehaviour
         float advance = Input.GetAxis("Vertical");
         float rotate = Input.GetAxis("Horizontal");
 
+        bool crash = Physics.Raycast(this.gameObject.transform.position, Vector3.down, 1.2f);
+        Debug.Log(crash);
+
         this.gameObject.transform.Rotate(Vector3.up * rotateVelocity * rotate);
         // problema: cuando va en una rampa , brinca sin razon 
         Vector3 currentVelocity = this.gameObject.transform.TransformDirection(Vector3.forward)  * velocity * advance;
         currentVelocity.y = body.velocity.y;
-        body.velocity = currentVelocity;
-
         
+        body.velocity = currentVelocity;
+        body.angularVelocity = Vector3.zero;
+
+
 
     }
 
