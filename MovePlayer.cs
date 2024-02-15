@@ -20,36 +20,39 @@ public class MovePlayer : MonoBehaviour
     // Update is called once per frame
     bool wasGrounded = false;
     void FixedUpdate()
-    {   
+    {
         float advance = Input.GetAxis("Vertical");
         float rotate = Input.GetAxis("Horizontal");
-
         this.gameObject.transform.Rotate(Vector3.up * rotateVelocity * rotate);
         RaycastHit hit;
-        bool crash = Physics.Raycast(this.gameObject.transform.position, Vector3.down, out hit ,1.2f );
-        
-        body.AddForce(this.gameObject.transform.TransformDirection(Vector3.forward) * velocity * advance, ForceMode.Impulse);
+        bool crash = Physics.Raycast(this.gameObject.transform.position, Vector3.down, out hit, 1.2f);
 
+        Vector3 vel = body.velocity;
+        Vector3 dir = this.gameObject.transform.TransformDirection(Vector3.forward) * velocity * advance;
+        dir.y = vel.y;
+        body.velocity = dir;
 
+        // body.AddForce(this.gameObject.transform.TransformDirection(Vector3.forward) * velocity * advance, ForceMode.Impulse);
+
+        /*
         Vector3 xzVel = body.velocity;
         xzVel.y = 0;
-
-        if (xzVel.magnitude > 5) {
-            xzVel = this.gameObject.transform.TransformDirection(Vector3.forward) * 5;
+        if (xzVel.magnitude > 7)
+        {
+            xzVel = this.gameObject.transform.TransformDirection(Vector3.forward) * 7;
             xzVel.y = body.velocity.y;
             body.velocity = xzVel;
         }
-        
-
         xzVel = body.velocity;
         xzVel.z = 0;
         xzVel.x = 0;
-
-        if (advance <= 0) {
+        if (advance <= 0)
+        {
             body.velocity = xzVel;
         }
-
+        */
     }
+
 
     void MovePlayerV1() {
         float advance = Input.GetAxis("Vertical");
