@@ -19,6 +19,7 @@ public class MovePlayer : MonoBehaviour
 
     // Update is called once per frame
     bool wasGrounded = false;
+    int jumps = 0;
     void FixedUpdate()
     {
         float advance = Input.GetAxis("Vertical");
@@ -26,33 +27,35 @@ public class MovePlayer : MonoBehaviour
         this.gameObject.transform.Rotate(Vector3.up * rotateVelocity * rotate);
         RaycastHit hit;
         bool crash = Physics.Raycast(this.gameObject.transform.position, Vector3.down, out hit, 1.2f);
+        Debug.Log("Crash? " + crash + jumps);
 
         Vector3 vel = body.velocity;
         Vector3 dir = this.gameObject.transform.TransformDirection(Vector3.forward) * velocity * advance;
         dir.y = vel.y;
+        if (crash && jumps > 0 && vel.y < 0) {
+            jumps = 0;
+        }
+        if (Input.GetButtonDown("Jump") && jumps == 1 && !crash)
+        {
+            dir.y = 10;
+            jumps = 2;
+        }
+
+        if (Input.GetButtonDown("Jump") && crash && jumps == 0 ) {
+            jumps = 1;
+            dir.y = 10;
+        }
+
+
         body.velocity = dir;
 
-        // body.AddForce(this.gameObject.transform.TransformDirection(Vector3.forward) * velocity * advance, ForceMode.Impulse);
-
-        /*
-        Vector3 xzVel = body.velocity;
-        xzVel.y = 0;
-        if (xzVel.magnitude > 7)
-        {
-            xzVel = this.gameObject.transform.TransformDirection(Vector3.forward) * 7;
-            xzVel.y = body.velocity.y;
-            body.velocity = xzVel;
-        }
-        xzVel = body.velocity;
-        xzVel.z = 0;
-        xzVel.x = 0;
-        if (advance <= 0)
-        {
-            body.velocity = xzVel;
-        }
-        */
     }
-
+        
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(this.gameObject.transform.position, Vector3.down);
+    }
 
     void MovePlayerV1() {
         float advance = Input.GetAxis("Vertical");
