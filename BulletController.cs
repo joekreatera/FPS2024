@@ -7,12 +7,15 @@ public class BulletController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Invoke("SelfDestroy", 3);
     }
 
-    // Update is called once per frame
-    void Update()
+    void SelfDestroy() {
+        Destroy(this.gameObject);
+    }
+    private void OnTriggerEnter(Collider other)
     {
-        
+        SelfDestroy();
+        CancelInvoke("SelfDestroy");
     }
 }
